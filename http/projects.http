@@ -1,0 +1,53 @@
+GET {{api_host}}/projects
+Cookie: CAPUCHIN_SID={{session_id}}
+
+###
+
+GET {{api_host}}/projects?filter_archived_clients=1
+Cookie: CAPUCHIN_SID={{session_id}}
+
+###
+
+GET {{api_host}}/projects?client_uuid={{client_uuid}}
+Cookie: CAPUCHIN_SID={{session_id}}
+
+###
+
+POST {{api_host}}/projects
+Cookie: CAPUCHIN_SID={{session_id}}
+Content-Type: application/json
+
+{
+  "clientUUID": "{{client_uuid}}",
+  "name": "RTI.CRM",
+  "billableRate": 90000
+}
+
+###
+
+GET {{api_host}}/projects/{{project_uuid}}
+Cookie: CAPUCHIN_SID={{session_id}}
+
+###
+
+PATCH {{api_host}}/projects/{{project_uuid}}
+Cookie: CAPUCHIN_SID={{session_id}}
+Content-Type: application/json
+
+{
+  "clientUUID": "{{client_uuid}}",
+  "name": "RTI.CRM",
+  "billableRate": 90000
+}
+
+###
+
+POST {{api_host}}/projects/{{project_uuid}}/archive
+Cookie: CAPUCHIN_SID={{session_id}}
+
+###
+
+POST {{api_host}}/projects/{{project_uuid}}/unarchive
+Cookie: CAPUCHIN_SID={{session_id}}
+
+###

@@ -1,0 +1,43 @@
+GET {{api_host}}/clients
+Cookie: CAPUCHIN_SID={{session_id}}
+
+###
+
+POST {{api_host}}/clients
+Cookie: CAPUCHIN_SID={{session_id}}
+Content-Type: application/json
+
+{
+  "name": "ФБТИ",
+  "billableRate": 90000,
+  "comment": "Виталий Кузнецов"
+}
+
+###
+
+GET {{api_host}}/clients/{{client_uuid}}
+Cookie: CAPUCHIN_SID={{session_id}}
+
+###
+
+PATCH {{api_host}}/clients/{{client_uuid}}
+Cookie: CAPUCHIN_SID={{session_id}}
+Content-Type: application/json
+
+{
+  "name": "ФБТИ",
+  "billableRate": 90000,
+  "comment": "Виталий Кузнецов"
+}
+
+###
+
+POST {{api_host}}/clients/{{client_uuid}}/archive
+Cookie: CAPUCHIN_SID={{session_id}}
+
+###
+
+POST {{api_host}}/clients/{{client_uuid}}/unarchive
+Cookie: CAPUCHIN_SID={{session_id}}
+
+###

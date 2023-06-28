@@ -1,0 +1,60 @@
+GET {{api_host}}/timelogs?date_from=2022-06-10&date_to=2022-06-11
+
+###
+
+GET {{api_host}}/timelogs?date_from=2022-06-13&date_to=2022-06-13&client_uuid={{client_uuid}}
+
+###
+
+GET {{api_host}}/timelogs?date_from=2022-06-14&date_to=2022-06-15&project_uuid={{project_uuid}}
+
+###
+
+POST {{api_host}}/timelogs
+Content-Type: application/json
+
+{
+  "projectUUID": "{{project_uuid}}",
+  "date": "2022-06-10",
+  "timeStart": "09:18:05",
+  "timeEnd": null,
+  "billableRate": 90000,
+  "comment": ""
+}
+
+###
+
+GET {{api_host}}/timelogs/{{timelog_uuid}}
+
+###
+
+PATCH {{api_host}}/timelogs/{{timelog_uuid}}
+Cookie: CAPUCHIN_SID={{session_id}}
+Content-Type: application/json
+
+{
+  "projectUUID": "{{project_uuid}}",
+  "date": "2022-05-31",
+  "timeStart": "06:23:05",
+  "timeEnd": "09:23:45",
+  "billableRate": 90000,
+  "comment": ""
+}
+
+###
+
+PATCH {{api_host}}/timelogs/{{timelog_uuid}}/stop
+Cookie: CAPUCHIN_SID={{session_id}}
+Content-Type: application/json
+
+{
+  "date": "2022-05-31",
+  "timeEnd": "09:23:05"
+}
+
+###
+
+DELETE {{api_host}}/timelogs/{{timelog_uuid}}
+Cookie: CAPUCHIN_SID={{session_id}}
+
+###

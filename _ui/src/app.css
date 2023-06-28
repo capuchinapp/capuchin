@@ -1,0 +1,124 @@
+@import './assets/bootstrap/bootstrap.min.css';
+@import './assets/segoeui/segoeui.css';
+@import '../node_modules/air-datepicker/air-datepicker.css';
+@import '../node_modules/tom-select/dist/css/tom-select.bootstrap5.min.css';
+
+:root,
+body {
+    font-family: 'Segoe UI', sans-serif !important;
+    font-size: 16px;
+    line-height: 24px;
+    font-weight: 400;
+}
+
+.w1 {
+    width: 1px;
+}
+
+.pt2 {
+    padding-top: 2px;
+}
+
+/* Fix AirDatepicker in modal */
+.air-datepicker-global-container {
+    z-index: 2000;
+}
+
+/* #AirDatepicker color scheme */
+.air-datepicker {
+    --adp-background-color-in-range: rgba(233, 84, 32, 0.1);
+    --adp-background-color-in-range-focused: rgba(233, 84, 32, 0.2);
+    --adp-background-color-selected-other-month-focused: #fb1c3c;
+    --adp-background-color-selected-other-month: #ff6421;
+    --adp-accent-color: #ff6421;
+    --adp-color-current-date: var(--adp-accent-color);
+    --adp-day-name-color: #ff6421;
+    --adp-day-name-color-hover: #fb1c3c;
+    --adp-cell-background-color-selected: #ff6421;
+    --adp-cell-background-color-selected-hover: #fb1c3c;
+    --adp-cell-background-color-in-range: rgba(233, 84, 32, 0.1);
+    --adp-cell-background-color-in-range-hover: rgba(233, 84, 32, 0.2);
+    --adp-cell-border-color-in-range: var(--adp-cell-background-color-selected);
+    --adp-btn-color: var(--adp-accent-color);
+}
+/* /AirDatepicker color scheme */
+
+/* #TomSelect color scheme */
+.plugin-dropdown_input.focus .ts-dropdown .dropdown-input {
+    border-color: #fb1c3c;
+    box-shadow: 0 0 0 0.25rem rgba(233, 84, 32, 0.25);
+}
+
+.ts-wrapper.multi .ts-control > div.active {
+    background: #ff6421;
+}
+
+.focus .ts-control {
+    border-color: #fb1c3c;
+    box-shadow: 0 0 0 0.25rem rgba(233, 84, 32, 0.25);
+}
+
+.ts-wrapper.is-invalid,
+.was-validated .invalid,
+.was-validated :invalid + .ts-wrapper {
+    border-color: #fb1c3c;
+}
+
+.ts-wrapper.is-invalid.focus .ts-control,
+.was-validated .invalid.focus .ts-control,
+.was-validated :invalid + .ts-wrapper.focus .ts-control {
+    border-color: #fb1c3c;
+    box-shadow: 0 0 0 0.25rem rgba(223, 56, 44, 0.25);
+}
+
+.ts-wrapper.is-valid,
+.was-validated .valid,
+.was-validated :valid + .ts-wrapper {
+    border-color: #16ae71;
+}
+
+.ts-wrapper.is-valid.focus .ts-control,
+.was-validated .valid.focus .ts-control,
+.was-validated :valid + .ts-wrapper.focus .ts-control {
+    border-color: #16ae71;
+    box-shadow: 0 0 0 0.25rem rgba(56, 180, 74, 0.25);
+}
+/* /TomSelect color scheme */
+
+/* #TomSelect patch for .form-select-sm */
+.ts-wrapper > .ts-control {
+    padding-top: 0;
+}
+/* /TomSelect patch for .form-select-sm */
+
+/* #svelte-toast color scheme */
+.toast-item {
+    --toastMsgPadding: 1rem;
+    --toastPadding: 0 0.5rem 0 0;
+    --toastBorderRadius: 0.25rem;
+}
+
+.toast-success {
+    --toastBackground: #16ae71;
+    --toastColor: white;
+    --toastBarBackground: #0c6340; /* -5 0to255.com */
+}
+
+.toast-danger {
+    --toastBackground: #fb1c3c;
+    --toastColor: white;
+    --toastBarBackground: #bf031e; /* -5 0to255.com */
+}
+
+.toast-warning {
+    --toastBackground: #ecbc64;
+    --toastColor: white;
+    --toastBarBackground: #e09a1b; /* -5 0to255.com */
+}
+
+.toast-info {
+    --toastBackground: #05337b;
+    --toastColor: white;
+    --toastBarBackground: #021129; /* -5 0to255.com */
+}
+/* /svelte-toast color scheme */

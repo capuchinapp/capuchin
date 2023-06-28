@@ -1,0 +1,9 @@
+GET {{api_host}}/sessions
+Cookie: CAPUCHIN_SID={{session_id}}
+
+###
+
+DELETE {{api_host}}/sessions/2
+Cookie: CAPUCHIN_SID={{session_id}}
+
+###

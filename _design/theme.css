@@ -1,0 +1,19 @@
+#logo {
+    --light-sand: #fbdb8b;
+    --dark-sand: #ecbc64;
+    --blue: #05337b;
+    --red: #fb1c3c;
+    --orange: #ff6421;
+    --green: #16ae71;
+}
+
+#bootstrap {
+    --primary: #ff6421;
+    --secondary: #dee2e6; /* $gray-300 */
+    --success: #16ae71;
+    --info: #05337b;
+    --warning: #ecbc64;
+    --danger: #fb1c3c;
+    --light: #f8f9fa; /* $gray-100 */
+    --dark: #373a3c; /* $gray-800 */
+}

@@ -1,0 +1,100 @@
+{
+    "pageNotFound": "Page not found",
+    "backToHome": "Return home",
+    "noContent": "There is nothing yet, let's fix it",
+    "addFirstEntry": "Add the first entry",
+    "nothingFound": "Nothing found, try another filter",
+    "loading": "Loading...",
+    "rate": "Rate",
+    "comment": "Comment",
+    "inArchive": "In the archive",
+    "toArchive": "To the archive",
+    "return": "Return",
+    "add": "Add",
+    "edit": "Edit",
+    "save": "Save",
+    "delete": "Delete",
+    "close": "Close",
+    "apply": "Apply",
+    "no": "no",
+    "clearAllFilters": "Clear all filters",
+    "goToSpecificDate": "Go to a specific date",
+    "today": "Today",
+    "date": "Date",
+    "time": "Time",
+    "hours": "Hours",
+    "since": "since",
+    "till": "till",
+    "api": {
+        "unknownError": "An unknown error has occurred",
+        "badRequest": "Bad request",
+        "objectNotFound": "The requested object was not found",
+        "routeNotFound": "The requested route is missing",
+        "internalServerError": "Internal server error",
+        "wrongPassword": "Wrong password"
+    },
+    "statuses": {
+        "all": "All",
+        "active": "Active",
+        "archived": "Archived"
+    },
+    "validate": {
+        "required": {
+            "input": "Please fill in the field.",
+            "select": "Please select a value."
+        },
+        "number": {
+            "gtezero": "The value cannot be less than zero."
+        },
+        "time": "The time should be in the HH:MM format.",
+        "password": "The password must be at least 8 characters long."
+    },
+    "auth": {
+        "login": {
+            "title": "Entrance",
+            "password": "Password",
+            "button": "Log in"
+        },
+        "logout": {
+            "button": "Log out"
+        }
+    },
+    "track": {
+        "title": "Time",
+        "add": "Add time",
+        "toRun": "To run",
+        "toStop": "Stop",
+        "stop": "Stop",
+        "warnCannotChangeRecordInArchive": "You cannot change the record that has the project or the client of the project in the archive"
+    },
+    "projects": {
+        "title": "Projects",
+        "project": "Project",
+        "name": "Name of the project",
+        "add": "Add a project",
+        "all": "All projects",
+        "rate": "Project rate",
+        "applyClientBillableRate": "Apply client rate"
+    },
+    "clients": {
+        "title": "Clients",
+        "client": "Client",
+        "name": "Name of the client",
+        "add": "Add a client",
+        "all": "All clients",
+        "rate": "Client rate"
+    },
+    "reports": {
+        "title": "Report"
+    },
+    "profile": {
+        "title": "Profile"
+    },
+    "sessions": {
+        "title": "My sessions"
+    },
+    "settings": {
+        "title": "Settings",
+        "dateFormat": "Date Format"
+    }
+}

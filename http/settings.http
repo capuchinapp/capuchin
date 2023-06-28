@@ -1,0 +1,14 @@
+GET {{api_host}}/settings
+Cookie: CAPUCHIN_SID={{session_id}}
+
+###
+
+PUT {{api_host}}/settings
+Cookie: CAPUCHIN_SID={{session_id}}
+Content-Type: application/json
+
+{
+  "dateFormat": "DD.MM.YYYY"
+}
+
+###

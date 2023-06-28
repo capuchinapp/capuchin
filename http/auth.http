@@ -1,0 +1,13 @@
+POST {{api_host}}/auth/login
+Content-Type: application/json
+
+{
+  "password": "12345678"
+}
+
+###
+
+POST {{api_host}}/auth/logout
+Cookie: CAPUCHIN_SID={{session_id}}
+
+###

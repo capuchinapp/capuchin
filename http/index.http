@@ -1,0 +1,8 @@
+GET {{main_host}}
+
+###
+
+GET {{api_host}}
+Cookie: CAPUCHIN_SID={{session_id}}
+
+###
