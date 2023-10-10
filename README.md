@@ -44,7 +44,7 @@ service capuchin status
 
 ## Development
 
-Порты по умолчанию:
+Default ports:
 
 -   `5173` - frontend
 -   `8090` - backend
