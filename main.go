@@ -8,11 +8,11 @@ import (
 	"capuchin/app/util/db"
 	"embed"
 	"flag"
-	"fmt"
 	"log"
 	"net/http"
 	"os"
 	"os/signal"
+	"path/filepath"
 	"syscall"
 	"time"
 
@@ -25,12 +25,13 @@ import (
 	_ "modernc.org/sqlite"
 )
 
-const appName string = "Capuchin"
-const dbPath string = "./capuchin.sqlite3"
-const envAuth string = "CAPUCHIN_AUTH"
-const envPwd string = "CAPUCHIN_PASSWORD"
-const cookieKey string = "CAPUCHIN_SID"
-const cookieExpiresDays uint16 = 365
+const (
+	appName   = "Capuchin"
+	dbFile    = "capuchin.sqlite3"
+	envAuth   = "CAPUCHIN_AUTH"
+	envPwd    = "CAPUCHIN_PASSWORD"
+	cookieKey = "CAPUCHIN_SID"
+)
 
 // Embed a directory
 //
@@ -48,7 +49,7 @@ var errorHandler = func(c *fiber.Ctx, err error) error {
 		msg = e.Message
 	}
 
-	fmt.Printf("[%s] %s: %s\n", c.Method(), c.OriginalURL(), err.Error())
+	log.Printf("[%s] %s: %s\n", c.Method(), c.OriginalURL(), err.Error())
 
 	c.Set(fiber.HeaderContentType, fiber.MIMETextPlainCharsetUTF8)
 
@@ -56,30 +57,37 @@ var errorHandler = func(c *fiber.Ctx, err error) error {
 }
 
 func main() {
-	fmt.Printf("===[ %s ]===\n", appName)
+	log.Printf("===[ %s ]===\n", appName)
 
 	var err error
 	var pwd string = ""
 
-	debugMode := flag.Bool("debug", false, "Debug mode")
-	port := flag.Int64("p", 8090, "Port")
+	debugMode := flag.Bool("debug", false, "Debug mode (default: false)")
+	port := flag.Int64("p", 8090, "Port (default: 8090)")
+	cookieExpiresDays := flag.Uint("cookie-expires-days", 365, "Cookie expires in days (default: 365)")
 	flag.Parse()
 
-	fmt.Printf("🐵 debugMode=%t\n", *debugMode)
+	log.Printf("🐵 debugMode=%t\n", *debugMode)
+	log.Printf("🐵 cookieExpiresDays=%d\n", *cookieExpiresDays)
 
 	auth, ok := os.LookupEnv(envAuth)
 	if ok && auth == "1" {
-		fmt.Printf("🐵 %s=1\n", envAuth)
+		log.Printf("🐵 %s=1\n", envAuth)
 
 		pwd = os.Getenv(envPwd)
 		if pwd == "" {
 			log.Fatalf("❌ [init] \"%s\" is empty\n", envPwd)
 		}
 	} else {
-		fmt.Printf("🐵 %s=0\n", envAuth)
+		log.Printf("🐵 %s=0\n", envAuth)
 	}
 
-	db, err := db.New(dbPath)
+	dir, err := filepath.Abs(filepath.Dir(os.Args[0]))
+	if err != nil {
+		log.Fatal("❌ [init] The app directory could not be determined\n", err)
+	}
+
+	db, err := db.New(dir + "/" + dbFile)
 	if err != nil {
 		log.Fatal("❌ [init] Database connection failed\n", err)
 	}
@@ -89,14 +97,14 @@ func main() {
 
 	go func() {
 		s := <-ch
-		fmt.Printf("👽 Received signal: %s\n", s)
+		log.Printf("👽 Received signal: %s\n", s)
 		time.Sleep(time.Second)
-		fmt.Println("💥 Server shutdown...")
+		log.Println("💥 Server shutdown...")
 		os.Exit(1)
 	}()
 
 	validate := validator.New()
-	cm := cookiemanager.New(cookieKey, cookieExpiresDays)
+	cm := cookiemanager.New(cookieKey, *cookieExpiresDays)
 
 	cr := sqlite.NewClientRepository(db)
 	pr := sqlite.NewProjectRepository(db)
@@ -148,6 +156,6 @@ func main() {
 		MaxAge:     3600,
 	}))
 
-	fmt.Printf("🌍 Server started: http://127.0.0.1:%d\n", *port)
+	log.Printf("🌍 Server started: http://127.0.0.1:%d\n", *port)
 	startServer(app, port)
 }

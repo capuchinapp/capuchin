@@ -59,7 +59,7 @@ func openUrl(url string) {
 
 	err := exec.Command(cmd, args...).Start()
 	if err != nil {
-		fmt.Printf("❌ openUrl: %s\n", err.Error())
+		log.Printf("❌ openUrl: %s\n", err.Error())
 		return
 	}
 }

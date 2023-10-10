@@ -3,6 +3,7 @@ package db
 import (
 	"database/sql"
 	"fmt"
+	"log"
 
 	"github.com/jmoiron/sqlx"
 )
@@ -14,13 +15,13 @@ func New(filepath string) (*sqlx.DB, error) {
 		return nil, fmt.Errorf("❌ [db] db.Ping: %v\n", err)
 	}
 
-	fmt.Printf("📒 Database loaded from file %s\n", filepath)
+	log.Printf("📒 Database loaded from file %s\n", filepath)
 
 	if _, err := prepareDb(db); err != nil {
 		return nil, fmt.Errorf("❌ [db] prepareDb: %v\n", err)
 	}
 
-	fmt.Println("📒 Tables have been prepared")
+	log.Println("📒 Tables have been prepared")
 
 	return db, nil
 }

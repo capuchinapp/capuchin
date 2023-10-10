@@ -8,10 +8,10 @@ import (
 
 type CookieManager struct {
 	Key         string
-	ExpiresDays uint16
+	ExpiresDays uint
 }
 
-func New(key string, expiresDays uint16) CookieManager {
+func New(key string, expiresDays uint) CookieManager {
 	return CookieManager{
 		Key:         key,
 		ExpiresDays: expiresDays,
