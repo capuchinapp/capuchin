@@ -7,7 +7,7 @@ import {toastDanger, toastWarning} from './Toast';
 
 // Create a instance of axios to use the same base url.
 const axiosApi = axios.create({
-    baseURL: import.meta.env.DEV ? import.meta.env.VITE_API_BASE_URL : `http://${location.host}/api`,
+    baseURL: import.meta.env.DEV ? import.meta.env.VITE_API_BASE_URL : `${location.protocol}//${location.host}/api`,
 });
 
 // Add a request interceptor
