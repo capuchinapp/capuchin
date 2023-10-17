@@ -290,7 +290,7 @@
             const project = findProject(res.projectUUID);
 
             if (project.uuid === '') {
-                toastWarning($_('warnCannotChangeRecordInArchive'), false);
+                toastWarning($_('track.warnCannotChangeRecordInArchive'), false);
 
                 return;
             }
