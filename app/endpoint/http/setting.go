@@ -38,7 +38,8 @@ type settingUpdateInput struct {
 }
 
 func (h *SettingHandler) Update(c *fiber.Ctx) error {
-	inp := new(settingUpdateInput)
+	var inp *settingUpdateInput = new(settingUpdateInput)
+
 	if err := c.BodyParser(inp); err != nil {
 		return util.ErrTrace("BodyParser", err)
 	}

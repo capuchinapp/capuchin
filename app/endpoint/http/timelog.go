@@ -96,7 +96,8 @@ type timelogCreateInput struct {
 }
 
 func (h *TimelogHandler) Create(c *fiber.Ctx) error {
-	inp := new(timelogCreateInput)
+	var inp *timelogCreateInput = new(timelogCreateInput)
+
 	if err := c.BodyParser(inp); err != nil {
 		return util.ErrTrace("BodyParser", err)
 	}
@@ -110,7 +111,7 @@ func (h *TimelogHandler) Create(c *fiber.Ctx) error {
 		return util.ErrTrace("stopRunningRecord", err)
 	}
 
-	id, err := h.insertRecord(*inp)
+	id, err := h.insertRecord(inp)
 	if err != nil {
 		return util.ErrTrace("insertRecord", err)
 	}
@@ -152,7 +153,8 @@ func (h *TimelogHandler) Update(c *fiber.Ctx) error {
 		return util.ErrTrace("uuid.Parse", err)
 	}
 
-	inp := new(timelogUpdateInput)
+	var inp *timelogUpdateInput = new(timelogUpdateInput)
+
 	err = c.BodyParser(inp)
 	if err != nil {
 		return util.ErrTrace("BodyParser", err)
@@ -233,7 +235,8 @@ func (h *TimelogHandler) Stop(c *fiber.Ctx) error {
 		return util.ErrTrace("uuid.Parse", err)
 	}
 
-	inp := new(timelogStopInput)
+	var inp *timelogStopInput = new(timelogStopInput)
+
 	err = c.BodyParser(inp)
 	if err != nil {
 		return util.ErrTrace("BodyParser", err)
@@ -260,7 +263,7 @@ func (h *TimelogHandler) Stop(c *fiber.Ctx) error {
 	return c.JSON(r)
 }
 
-func (h *TimelogHandler) insertRecord(inp timelogCreateInput) (uuid.UUID, error) {
+func (h *TimelogHandler) insertRecord(inp *timelogCreateInput) (uuid.UUID, error) {
 	id := uuid.New()
 
 	tl := entity.Timelog{
@@ -342,7 +345,7 @@ func (h *TimelogHandler) stopRecord(inp *timelogStopInput, tl *entity.Timelog) (
 		for i := 0; i < diff; i++ {
 			curDate = curDate.AddDate(0, 0, 1)
 
-			_, err := h.insertRecord(timelogCreateInput{
+			_, err := h.insertRecord(&timelogCreateInput{
 				ProjectUUID:  tl.ProjectUUID,
 				Date:         curDate.Format("2006-01-02"),
 				TimeStart:    "00:00:00",
@@ -359,7 +362,7 @@ func (h *TimelogHandler) stopRecord(inp *timelogStopInput, tl *entity.Timelog) (
 	// Добавляем последний день
 	curDate = curDate.AddDate(0, 0, 1)
 
-	id, err := h.insertRecord(timelogCreateInput{
+	id, err := h.insertRecord(&timelogCreateInput{
 		ProjectUUID:  tl.ProjectUUID,
 		Date:         curDate.Format("2006-01-02"),
 		TimeStart:    "00:00:00",

@@ -74,7 +74,8 @@ type projectCreateInput struct {
 }
 
 func (h *ProjectHandler) Create(c *fiber.Ctx) error {
-	inp := new(projectCreateInput)
+	var inp *projectCreateInput = new(projectCreateInput)
+
 	if err := c.BodyParser(inp); err != nil {
 		return util.ErrTrace("BodyParser", err)
 	}
@@ -134,7 +135,8 @@ func (h *ProjectHandler) Update(c *fiber.Ctx) error {
 		return util.ErrTrace("uuid.Parse", err)
 	}
 
-	inp := new(projectUpdateInput)
+	var inp *projectUpdateInput = new(projectUpdateInput)
+
 	if err := c.BodyParser(inp); err != nil {
 		return util.ErrTrace("BodyParser", err)
 	}

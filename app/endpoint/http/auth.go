@@ -37,9 +37,9 @@ type authLoginInput struct {
 }
 
 func (h *AuthHandler) Login(c *fiber.Ctx) error {
-	inp := authLoginInput{}
+	var inp *authLoginInput = new(authLoginInput)
 
-	if err := c.BodyParser(&inp); err != nil {
+	if err := c.BodyParser(inp); err != nil {
 		return util.ErrTrace("BodyParser", err)
 	}
 

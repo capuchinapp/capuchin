@@ -47,7 +47,8 @@ type clientCreateInput struct {
 }
 
 func (h *ClientHandler) Create(c *fiber.Ctx) error {
-	inp := new(clientCreateInput)
+	var inp *clientCreateInput = new(clientCreateInput)
+
 	if err := c.BodyParser(inp); err != nil {
 		return util.ErrTrace("BodyParser", err)
 	}
@@ -105,7 +106,8 @@ func (h *ClientHandler) Update(c *fiber.Ctx) error {
 		return util.ErrTrace("uuid.Parse", err)
 	}
 
-	inp := new(clientUpdateInput)
+	var inp *clientUpdateInput = new(clientUpdateInput)
+
 	if err := c.BodyParser(inp); err != nil {
 		return util.ErrTrace("BodyParser", err)
 	}
