@@ -83,14 +83,15 @@
 
     let /** @type {number} */ startedTimelogTimer;
     let /** @type {string} */ startedTimelogUUID;
+    let /** @type {dayjs.Dayjs} */ startedTimelogTime;
 
     let title = '';
-    let startedTimelogSeconds = 0;
     let validateErrors = {};
     let timelogList = [];
     let clientList = [];
     let projectList = [];
     let timelog = timelogTpl;
+    let startedTimelogSeconds = 0;
 
     $: {
         timelog.billableRate = timelog.project.billableRate;
@@ -124,13 +125,12 @@
             if (startedTimelogUUID !== record.uuid) {
                 stopTimer();
 
-                startedTimelogSeconds = dayjs().diff(dayjs(`${record.date} ${record.timeStart}`), 'seconds');
                 startedTimelogUUID = record.uuid;
+                startedTimelogTime = dayjs(`${record.date} ${record.timeStart}`);
                 calculateTimeTotalSeconds();
 
                 startedTimelogTimer = setInterval(() => {
-                    startedTimelogSeconds++;
-                    $timeTotalSeconds++;
+                    calculateTimeTotalSeconds();
                 }, 1000);
 
                 $timeTotalClass = 'text-success';
@@ -233,10 +233,7 @@
                             timelogList[idx] = res;
 
                             if (startedTimelogUUID === timelog.uuid) {
-                                startedTimelogSeconds = dayjs().diff(
-                                    dayjs(`${timelog.date} ${timelog.timeStart}`),
-                                    'seconds'
-                                );
+                                startedTimelogTime = dayjs(`${timelog.date} ${timelog.timeStart}`);
                             }
 
                             timelogModal.hide();
@@ -407,6 +404,11 @@
      * Расчёт суммы времени всех логов
      */
     function calculateTimeTotalSeconds() {
+        startedTimelogSeconds = 0;
+        if (startedTimelogTime !== undefined) {
+            startedTimelogSeconds = dayjs().diff(startedTimelogTime, 'seconds');
+        }
+
         $timeTotalSeconds = timelogList.reduce(
             (/** @type {number} */ preVal, /** @type {Object} */ curVal) => preVal + curVal.durationSeconds,
             startedTimelogSeconds
@@ -419,6 +421,7 @@
     function stopTimer() {
         if (startedTimelogTimer) {
             clearInterval(startedTimelogTimer);
+            startedTimelogTime = undefined;
             startedTimelogSeconds = 0;
             $timeTotalClass = '';
         }
