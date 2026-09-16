@@ -1,0 +1,102 @@
+The following components are included in this product:
+
+Font Awesome
+https://github.com/FortAwesome/Font-Awesome
+Copyright (c) 2024 Fonticons, Inc. (https://fontawesome.com)
+See source code for license details.
+
+Floating UI (ex. Popper)
+https://github.com/floating-ui/floating-ui
+Copyright (c) 2021 Floating UI contributors
+See source code for license details.
+
+svelte-toast
+https://github.com/zerodevx/svelte-toast
+Copyright (c) 2024, Jason Lee <jason@zerodevx.com>
+See source code for license details.
+
+Air Datepicker
+https://github.com/t1m0n/air-datepicker
+Copyright (c) Timofey Marochkin
+See source code for license details.
+
+Axios
+https://github.com/axios/axios
+Copyright (c) 2014-present Matt Zabriskie & Collaborators
+See source code for license details.
+
+Bootstrap 5
+https://github.com/twbs/bootstrap
+Copyright (c) 2011-2025 The Bootstrap Authors
+See source code for license details.
+
+Chart.js
+https://github.com/chartjs/Chart.js
+Copyright (c) 2014-2024 Chart.js Contributors
+See source code for license details.
+
+dayjs
+https://github.com/iamkun/dayjs
+Copyright (c) 2018-present, iamkun
+See source code for license details.
+
+imaskjs
+https://github.com/uNmAnNeR/imaskjs
+Copyright (c) 2016 uNmAnNeR
+See source code for license details.
+
+Marked
+https://github.com/markedjs/marked
+Copyright (c) 2018+, MarkedJS
+Copyright (c) 2011-2018, Christopher Jeffrey (https://github.com/chjj/)
+See source code for license details.
+
+svelte-fa
+https://github.com/Cweili/svelte-fa
+Copyright (c) 2022 Cweili
+See source code for license details.
+
+sveltekit-i18n
+https://github.com/sveltekit-i18n/lib
+Copyright (c) 2022 sveltekit-i18n
+See source code for license details.
+
+svelte-spa-router
+https://github.com/ItalyPaleAle/svelte-spa-router
+Copyright (c) 2019, Alessandro Segala
+See source code for license details.
+
+Tom Select
+https://github.com/orchidjs/tom-select
+Copyright 2013–2015 Brian Reavis
+See source code for license details.
+
+Yup
+https://github.com/jquense/yup
+Copyright (c) 2014 Jason Quense
+See source code for license details.
+
+ESLint
+https://github.com/eslint/eslint
+Copyright OpenJS Foundation and other contributors, <www.openjsf.org>
+See source code for license details.
+
+@sveltejs/vite-plugin-svelte
+https://github.com/sveltejs/vite-plugin-svelte
+Copyright (c) 2021 these people (https://github.com/sveltejs/vite-plugin-svelte/graphs/contributors)
+See source code for license details.
+
+globals
+https://github.com/sindresorhus/globals
+Copyright (c) Sindre Sorhus <sindresorhus@gmail.com>
+See source code for license details.
+
+Svelte
+https://github.com/sveltejs/svelte
+Copyright (c) 2016-2025 Svelte Contributors (https://github.com/sveltejs/svelte/graphs/contributors)
+See source code for license details.
+
+Vite
+https://github.com/vitejs/vite
+Copyright (c) 2019-present, VoidZero Inc. and Vite contributors
+See source code for license details.

@@ -1,0 +1,35 @@
+name: capuchin
+
+services:
+  capuchin:
+    image: ghcr.io/capuchinapp/capuchin:${APP_VERSION}
+    container_name: capuchin
+    labels:
+      - "app.project.name=capuchin"
+      - "app.service.name=app"
+      - "app.service.type=all-in-one"
+      - "app.version=${APP_VERSION}"
+    restart: unless-stopped
+    environment:
+      SQLITE_DB_PATH: /app/data/capuchin.db
+      GOOSE_DRIVER: sqlite3
+      GOOSE_DBSTRING: /app/data/capuchin.db
+      GOOSE_MIGRATION_DIR: ./migrations
+      HTTP_CORS_ALLOW_ORIGINS: "https://app.capuchin.ru"
+      COOKIE_DOMAIN: "app.capuchin.ru"
+      MAILER_HOST: "smtp.jino.ru"
+      MAILER_PORT: 465
+      MAILER_USERNAME: "no-reply@capuchin.ru"
+      MAILER_PASSWORD: "password"
+      MAILER_FROM: "Capuchin <no-reply@capuchin.ru>"
+      OTEL_EXPORTER_OTLP_ENDPOINT: "http://sonorusops_jaeger:4318"
+    volumes:
+      - ./data:/app/data
+    ports:
+      - "3000:3000"
+    networks:
+      - sonorusops-network
+
+networks:
+  sonorusops-network:
+    external: true

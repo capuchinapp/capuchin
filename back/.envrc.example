@@ -1,0 +1,28 @@
+# Это пример файла, содержащего переменные среды для настройки приложения.
+#
+# Скопируйте этот файл:
+#   cp .envrc.example .envrc
+#
+# Используйте direnv (https://direnv.net) для автоматической загрузки содержимого файла.
+
+export LOG_LEVEL=debug
+
+export METRICS_PORT=8080
+
+export HTTP_PORT=5172
+export HTTP_CORS_ALLOW_ORIGINS="http://localhost:5173"
+
+export COOKIE_SECURE=false
+export COOKIE_DOMAIN=localhost
+
+export SQLITE_DB_PATH=capuchin.db
+
+export GOOSE_DRIVER=sqlite3
+export GOOSE_DBSTRING="${SQLITE_DB_PATH}"
+export GOOSE_MIGRATION_DIR=./migrations
+
+export MAILER_HOST="smtp.jino.ru"
+export MAILER_PORT=465
+export MAILER_USERNAME="no-reply@capuchin.ru"
+export MAILER_PASSWORD="password"
+export MAILER_FROM="Capuchin <no-reply@capuchin.ru>"

@@ -1,0 +1,66 @@
+The following components are included in this product:
+
+Universally Unique Lexicographically Sortable Identifier
+https://github.com/oklog/ulid
+Copyright 2024 Peter Bourgon (@peterbourgon) and Tomás Senart (@tsenart)
+See source code for license details.
+
+$env
+https://github.com/caarlos0/env
+Copyright (c) 2015-2024 Carlos Alexandro Becker
+See source code for license details.
+
+Package validator
+https://github.com/go-playground/validator
+Copyright (c) 2015 Dean Karn
+See source code for license details.
+
+Fiber
+https://github.com/gofiber/fiber
+Copyright (c) 2019-present Fenny and Contributors
+See source code for license details.
+
+sqlx
+https://github.com/jmoiron/sqlx
+Copyright (c) 2013, Jason Moiron
+See source code for license details.
+
+pq - A pure Go postgres driver for Go's database/sql package
+https://github.com/lib/pq
+Copyright (c) 2011-2013, 'pq' Contributors Portions Copyright (C) 2011 Blake Mizerany
+See source code for license details.
+
+Testify - Thou Shalt Write Tests
+https://github.com/stretchr/testify
+Copyright (c) 2012-2020 Mat Ryer, Tyler Bunnell and contributors.
+See source code for license details.
+
+go-mail - Easy to use, yet comprehensive library for sending mails with Go
+https://github.com/wneessen/go-mail
+Copyright (c) 2022-2023 The go-mail Authors
+See source code for license details.
+
+zap
+https://github.com/uber-go/zap
+Copyright (c) 2016-2024 Uber Technologies, Inc.
+See source code for license details.
+
+golang-lru
+https://github.com/hashicorp/golang-lru
+Copyright (c) 2014 HashiCorp, Inc.
+See source code for license details.
+
+bluemonday
+https://github.com/microcosm-cc/bluemonday
+Copyright (c) 2014, David Kitchen david@buro9.com
+See source code for license details.
+
+Prometheus Go client library
+https://github.com/prometheus/client_golang
+Copyright 2012-2015 The Prometheus Authors
+See source code for license details.
+
+fasthttp
+https://github.com/valyala/fasthttp
+Copyright (c) 2015-present Aliaksandr Valialkin, VertaMedia, Kirill Danshin, Erik Dubbelboer, FastHTTP Authors
+See source code for license details.

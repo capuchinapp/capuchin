@@ -1,0 +1,14 @@
+with-expecter: true
+disable-config-search: true
+all: true
+dir: "{{.InterfaceDir}}/mocks"
+mockname: "{{.InterfaceName}}Mock"
+filename: "{{.InterfaceName | snakecase}}_mock.go"
+outpkg: "mocks"
+packages:
+  capuchin/internal/mailer:
+  capuchin/internal/middleware:
+  capuchin/internal/restapi:
+  capuchin/internal/service:
+  capuchin/internal/sessionupdater:
+  capuchin/internal/sqlite:
