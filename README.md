@@ -34,6 +34,9 @@
     ```
 2. Запустите новую версию приложения, пересоздав контейнер
     ```bash
+    > APP_VERSION=latest
+    > APP_VERSION=X.Y
+    > APP_VERSION=X.Y.Z
     export APP_VERSION=latest && docker compose -f ./compose.yaml up -d --force-recreate
     ```
 3. Проверьте работоспособность новой версии
