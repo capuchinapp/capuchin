@@ -46,7 +46,7 @@ run: tools-goose
 
 .PHONY: build-migrate
 build-migrate:
-	@go build -trimpath -o migrate-pg-to-sqlite -ldflags="-w" ./cmd/migrate-pg-to-sqlite/main.go
+	@CGO_ENABLED=0 go build -trimpath -ldflags="-w" -o migrate-pg-to-sqlite ./cmd/migrate-pg-to-sqlite/main.go
 
 .PHONY: tools
 tools: tools-goose tools-govulncheck tools-mocks

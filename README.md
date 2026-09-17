@@ -7,15 +7,18 @@
 1. Создайте каталог проекта
     ```bash
     mkdir /opt/capuchin
+    cd /opt/capuchin
     ```
 2. Скачайте compose-файл
     ```bash
-    curl -o /opt/capuchin/compose.yaml https://raw.githubusercontent.com/capuchinapp/capuchin/refs/heads/master/deploy/compose.yaml
+    curl -o compose.yaml https://raw.githubusercontent.com/capuchinapp/capuchin/refs/heads/master/deploy/compose.yaml
     ```
 3. Запустите приложение
+    > APP_VERSION=latest
+    > APP_VERSION=X.Y
+    > APP_VERSION=X.Y.Z
     ```bash
-    cd /opt/capuchin
-    export APP_VERSION=vX.Y.Z && docker compose -f ./compose.yaml up -d
+    export APP_VERSION=latest && docker compose -f ./compose.yaml up -d
     ```
 4. Мониторинг доступности (API и веб-интерфейс обслуживаются одним контейнером на одном порту)
     - `GET https://domain.tld/api/health` — проверка API
@@ -31,7 +34,7 @@
     ```
 2. Запустите новую версию приложения, пересоздав контейнер
     ```bash
-    export APP_VERSION=vX.Y.Z && docker compose -f ./compose.yaml up -d --force-recreate
+    export APP_VERSION=latest && docker compose -f ./compose.yaml up -d --force-recreate
     ```
 3. Проверьте работоспособность новой версии
     ```bash
@@ -47,7 +50,7 @@ Blue-green deployment не используется: два одновремен
 ### Релиз
 
 1. Добавьте изменения в файл `changelog.ru.md` в каталоге `front/src/assets`
-2. Создайте тег формата `vX.Y.Z` в ветке `master`, дальше `.github/workflows/build.yml` всё сделает сам
+2. Запустите команду `make release`
 
 ### Порты по умолчанию
 
@@ -80,17 +83,9 @@ Blue-green deployment не используется: два одновремен
 
 ### Обновлении версий (golang, golangci-lint и alpine)
 
-- `.github/workflows/audit.yml`
+- `back/go.mod`
     ```bash
-    - name: Set up Go
-      uses: actions/setup-go@v5
-      with:
-        go-version: '1.26'
-    ...
-    - name: Run linter check
-      uses: golangci/golangci-lint-action@v7
-      with:
-        version: v2.11.4
+    go 1.26.0
     ```
 - `back/.tool-versions`: с обязательным указанием патча, требование asdf-manager
     ```bash
@@ -102,9 +97,17 @@ Blue-green deployment не используется: два одновремен
     ...
     FROM alpine:3.22
     ```
-- `back/go.mod`: совпадает с версией из `.tool-versions`
+- `.github/workflows/audit.yml`
     ```bash
-    go 1.26.0
+    - name: Set up Go
+      uses: actions/setup-go@v5
+      with:
+        go-version: '1.26'
+    ...
+    - name: Run linter check
+      uses: golangci/golangci-lint-action@v7
+      with:
+        version: v2.11.4
     ```
 
 ## БД
