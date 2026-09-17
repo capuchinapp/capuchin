@@ -36,7 +36,7 @@ import (
 const (
 	defaultIdleTimeout = 5 * time.Second
 
-	defaultLimiterMax        = 10
+	defaultLimiterMax        = 50
 	defaultLimiterExpiration = 1 * time.Second
 
 	defaultSessionCacheSize = 100
