@@ -52,8 +52,7 @@ Blue-green deployment не используется: два одновремен
 
 ### Релиз
 
-1. Добавьте изменения в файл `changelog.ru.md` в каталоге `front/src/assets`
-2. Запустите команду `make release`
+1. Запустите команду `make release`
 
 ### Порты по умолчанию
 
@@ -157,7 +156,6 @@ docker exec capuchin sqlite3 /app/data/restore.db "VACUUM INTO '/app/data/capuch
 - [Chart.js](https://github.com/chartjs/Chart.js/releases)
 - [FontAwesome](https://fontawesome.com/changelog)
 - [Globals](https://github.com/sindresorhus/globals/releases)
-- [Marked](https://github.com/markedjs/marked/releases)
 - [Svelte](https://svelte-changelog.vercel.app/)
 - [sveltekit-i18n](https://github.com/sveltekit-i18n/lib/releases)
 - [Tom Select](https://github.com/orchidjs/tom-select/releases)
