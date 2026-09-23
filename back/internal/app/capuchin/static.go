@@ -1,4 +1,4 @@
-package cloudbackend
+package capuchin
 
 import (
 	"io/fs"
@@ -9,7 +9,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/adaptor"
 
-	"capuchin/internal/application/cloudbackend/web"
+	"capuchin/internal/app/capuchin/web"
 )
 
 const (

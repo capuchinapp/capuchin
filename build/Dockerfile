@@ -21,13 +21,13 @@ WORKDIR /app
 
 COPY back/ ./
 
-COPY --from=frontend-builder /app/dist ./internal/application/cloudbackend/web/dist
+COPY --from=frontend-builder /app/dist ./internal/app/capuchin/web/dist
 
 ARG APP_VERSION
 
 RUN go mod tidy
 
-RUN go build -trimpath -o capuchin -ldflags="-w -X 'main.appVersion=${APP_VERSION}'" ./cmd/cloudbackend/main.go
+RUN go build -trimpath -o capuchin -ldflags="-w -X 'main.appVersion=${APP_VERSION}'" ./cmd/capuchin/main.go
 
 RUN go install github.com/pressly/goose/v3/cmd/goose@v3.28.0
 RUN cp /go/bin/goose .

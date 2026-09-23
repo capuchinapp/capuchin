@@ -6,13 +6,13 @@ import (
 
 	_ "modernc.org/sqlite"
 
-	"capuchin/internal/application/cloudbackend"
+	"capuchin/internal/app/capuchin"
 )
 
 var appVersion = "v0.0.0" //nolint:gochecknoglobals // все в порядке
 
 func main() {
-	err := cloudbackend.Start(appVersion)
+	err := capuchin.Start(appVersion)
 	if err != nil {
 		log.Fatalf("Start: %v\n", err)
 	}

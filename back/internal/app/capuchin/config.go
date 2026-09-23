@@ -1,4 +1,4 @@
-package cloudbackend
+package capuchin
 
 import (
 	"fmt"

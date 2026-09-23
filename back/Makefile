@@ -42,11 +42,7 @@ integration-sqlite:
 .PHONY: run
 run: tools-goose
 	@./bin/goose up
-	@go run -race ./cmd/cloudbackend/main.go
-
-.PHONY: build-migrate
-build-migrate:
-	@CGO_ENABLED=0 go build -trimpath -ldflags="-w" -o migrate-pg-to-sqlite ./cmd/migrate-pg-to-sqlite/main.go
+	@go run -race ./cmd/capuchin/main.go
 
 .PHONY: tools
 tools: tools-goose tools-govulncheck tools-mocks

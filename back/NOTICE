@@ -25,11 +25,6 @@ https://github.com/jmoiron/sqlx
 Copyright (c) 2013, Jason Moiron
 See source code for license details.
 
-pq - A pure Go postgres driver for Go's database/sql package
-https://github.com/lib/pq
-Copyright (c) 2011-2013, 'pq' Contributors Portions Copyright (C) 2011 Blake Mizerany
-See source code for license details.
-
 Testify - Thou Shalt Write Tests
 https://github.com/stretchr/testify
 Copyright (c) 2012-2020 Mat Ryer, Tyler Bunnell and contributors.
