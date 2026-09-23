@@ -43,51 +43,12 @@ jobs:
           VERSION=${{ inputs.tag || github.ref_name }}
           make PUSH=true APP_VERSION=${VERSION#v} build-docker-capuchin
 
-      - name: Determine changelog range
-        id: range
-        env:
-          TAG: ${{ inputs.tag || github.ref_name }}
-        run: |
-          if [ -z "$TAG" ]; then
-            echo "::error::Tag is empty" >&2
-            exit 1
-          fi
-          prev=$(git tag -l 'v[0-9]*.[0-9]*.[0-9]*' --merged "$TAG" --sort=-version:refname | head -n2 | tail -n1)
-          if [ -n "$prev" ] && [ "$prev" != "$TAG" ]; then
-            echo "mode=tags" >> "$GITHUB_OUTPUT"
-            echo "from=$TAG" >> "$GITHUB_OUTPUT"
-            echo "to=$prev" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-          root=$(git rev-list --max-parents=0 HEAD | head -n1)
-          self=$(git rev-parse "$TAG^{commit}")
-          if [ "$root" != "$self" ]; then
-            echo "mode=root" >> "$GITHUB_OUTPUT"
-            echo "from=$TAG" >> "$GITHUB_OUTPUT"
-            echo "to=$root" >> "$GITHUB_OUTPUT"
-          else
-            echo "mode=none" >> "$GITHUB_OUTPUT"
-          fi
-
       - name: Generate Changelog
         id: changelog
-        if: steps.range.outputs.mode == 'tags'
         uses: requarks/changelog-action@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          tag: ${{ steps.range.outputs.from }}
-          writeToFile: false
-          excludeTypes: ""
-          includeInvalidCommits: true
-
-      - name: Generate Changelog (first release)
-        id: changelog-first
-        if: steps.range.outputs.mode == 'root'
-        uses: requarks/changelog-action@v1
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          fromTag: ${{ steps.range.outputs.from }}
-          toTag: ${{ steps.range.outputs.to }}
+          tag: ${{ inputs.tag || github.ref_name }}
           writeToFile: false
           excludeTypes: ""
           includeInvalidCommits: true
@@ -97,5 +58,5 @@ jobs:
         with:
           tag: ${{ inputs.tag || github.ref_name }}
           name: Release ${{ inputs.tag || github.ref_name }}
-          body: ${{ steps.changelog.outputs.changes || steps.changelog-first.outputs.changes || format('Initial release {0}', inputs.tag || github.ref_name) }}
+          body: ${{ steps.changelog.outputs.changes }}
           token: ${{ secrets.GITHUB_TOKEN }}
