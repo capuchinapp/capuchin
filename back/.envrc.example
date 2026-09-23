@@ -5,6 +5,8 @@
 #
 # Используйте direnv (https://direnv.net) для автоматической загрузки содержимого файла.
 
+# local, stage, prod
+export ENVIRONMENT=prod
 export LOG_LEVEL=debug
 
 export METRICS_PORT=8080

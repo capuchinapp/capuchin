@@ -64,6 +64,9 @@ func Start(appVersion string) error { //nolint:gocognit,maintidx // Всё в п
 	}
 	defer logger.Sync() //nolint:errcheck // все в порядке
 
+	environment := domain.EnvironmentFromString(conf.Environment)
+	logger.Info("Environment", zap.String("environment", environment.String()))
+
 	mailClient, err := mail.NewClient(
 		conf.Mailer.Host,
 		mail.WithPort(conf.Mailer.Port),
@@ -76,13 +79,6 @@ func Start(appVersion string) error { //nolint:gocognit,maintidx // Всё в п
 	if err != nil {
 		return fmt.Errorf("create mail client: %v", err)
 	}
-
-	tp := newTracer(ctx)
-	defer func() {
-		if err := tp.Shutdown(context.Background()); err != nil {
-			log.Printf("Error shutting down tracer provider: %v", err)
-		}
-	}()
 
 	app := fiber.New(fiber.Config{
 		Immutable:               true,
@@ -132,9 +128,17 @@ func Start(appVersion string) error { //nolint:gocognit,maintidx // Всё в п
 		return c.SendString("OK")
 	})
 
-	app.Use(otelfiber.Middleware(
-		otelfiber.WithTracerProvider(tp),
-	))
+	if environment != domain.EnvironmentLocal {
+		tp := newTracer(ctx)
+		defer func() {
+			if err := tp.Shutdown(context.Background()); err != nil {
+				log.Printf("Error shutting down tracer provider: %v", err)
+			}
+		}()
+		app.Use(otelfiber.Middleware(
+			otelfiber.WithTracerProvider(tp),
+		))
+	}
 
 	if conf.HTTP.CORS.Enabled {
 		corsConfig := cors.Config{

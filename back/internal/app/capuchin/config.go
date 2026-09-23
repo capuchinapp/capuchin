@@ -9,6 +9,10 @@ import (
 
 // Configuration представляет конфигурацию приложения.
 type Configuration struct {
+	// Environment - среда выполнения.
+	// Возможные значения: "local", "stage", "prod".
+	Environment string `env:"ENVIRONMENT" envDefault:"prod"`
+
 	Log     Log
 	Metrics Metrics
 	HTTP    HTTPServer
