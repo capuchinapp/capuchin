@@ -41,6 +41,8 @@ const (
 
 	defaultSessionCacheSize = 100
 	defaultSessionCacheTTL  = 10 * time.Minute
+
+	defaultShutdownTimeout = 10 * time.Second
 )
 
 // Start запускает приложение.
@@ -256,25 +258,44 @@ func Start(appVersion string) error { //nolint:gocognit,maintidx // Всё в п
 		zap.String("address", appAddr),
 	)
 
-	startMetrics(conf.Metrics.Port, db.DB, conf.Sqlite.DBPath, metricsInstance, logger)
+	metricsServer := startMetrics(conf.Metrics.Port, db.DB, conf.Sqlite.DBPath, metricsInstance, logger)
 
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
 
 	<-c // Блокируем основной поток до тех пор, пока не будет получено прерывание
+
+	// Возвращаем стандартную обработку сигналов, чтобы повторный сигнал
+	// мог принудительно завершить процесс, если shutdown зависнет.
+	signal.Stop(c)
+
 	logger.Info("Gracefully shutting down...")
-	err = app.Shutdown()
-	if err != nil {
+
+	shutdownCtx, shutdownCancel := context.WithTimeout(context.Background(), defaultShutdownTimeout)
+	defer shutdownCancel()
+
+	if err := app.ShutdownWithContext(shutdownCtx); err != nil {
 		logger.Error("Shutdown",
 			zap.Error(err),
 		)
-		panic(err)
 	}
 
 	logger.Info("Running cleanup tasks...")
 
 	// Здесь задачи по очистке
 	sessionUpdater.Stop()
+
+	if err := metricsServer.Shutdown(shutdownCtx); err != nil {
+		logger.Error("Metrics shutdown",
+			zap.Error(err),
+		)
+	}
+
+	if err := db.Close(); err != nil {
+		logger.Error("Close database",
+			zap.Error(err),
+		)
+	}
 
 	logger.Info("Stop capuchin API service")
 

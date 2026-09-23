@@ -2,8 +2,10 @@ package capuchin
 
 import (
 	"database/sql"
+	"errors"
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/collectors"
@@ -13,31 +15,38 @@ import (
 	"capuchin/internal/metrics"
 )
 
-// startMetrics запускает метрики.
+const metricsReadHeaderTimeout = 5 * time.Second
+
+// startMetrics запускает сервер метрик и возвращает его для graceful shutdown.
 func startMetrics(
 	port int,
 	db *sql.DB,
 	dbName string,
 	metricsInstance *metrics.Metrics,
 	logger *zap.Logger,
-) {
-	metricsAddr := fmt.Sprintf(":%d", port)
+) *http.Server {
+	reg := prometheus.NewRegistry()
+
+	reg.MustRegister(
+		collectors.NewGoCollector(),
+		collectors.NewDBStatsCollector(db, dbName),
+		collectors.NewProcessCollector(collectors.ProcessCollectorOpts{}),
+		metricsInstance.HTTPRequestsTotal,
+		metricsInstance.HTTPRequestsCurrent,
+		metricsInstance.HTTPRequestDurationSeconds,
+	)
+
+	mux := http.NewServeMux()
+	mux.Handle("/metrics", promhttp.HandlerFor(reg, promhttp.HandlerOpts{Registry: reg}))
+
+	server := &http.Server{
+		Addr:              fmt.Sprintf(":%d", port),
+		Handler:           mux,
+		ReadHeaderTimeout: metricsReadHeaderTimeout,
+	}
 
 	go func() {
-		reg := prometheus.NewRegistry()
-
-		reg.MustRegister(
-			collectors.NewGoCollector(),
-			collectors.NewDBStatsCollector(db, dbName),
-			collectors.NewProcessCollector(collectors.ProcessCollectorOpts{}),
-			metricsInstance.HTTPRequestsTotal,
-			metricsInstance.HTTPRequestsCurrent,
-			metricsInstance.HTTPRequestDurationSeconds,
-		)
-
-		http.Handle("/metrics", promhttp.HandlerFor(reg, promhttp.HandlerOpts{Registry: reg}))
-
-		if err := http.ListenAndServe(metricsAddr, nil); err != nil { //nolint:gosec // Данный адрес не будет доступен в интернете
+		if err := server.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
 			logger.Error("metrics listen",
 				zap.Error(err),
 			)
@@ -46,6 +55,8 @@ func startMetrics(
 	}()
 
 	logger.Info("Metrics started",
-		zap.String("address", metricsAddr),
+		zap.String("address", server.Addr),
 	)
+
+	return server
 }
