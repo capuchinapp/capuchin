@@ -14,9 +14,7 @@
     curl -o compose.yaml https://raw.githubusercontent.com/capuchinapp/capuchin/refs/heads/master/deploy/compose.yaml
     ```
 3. Запустите приложение
-    > APP_VERSION=latest
-    > APP_VERSION=X.Y
-    > APP_VERSION=X.Y.Z
+    > Версия: latest или X.Y или X.Y.Z
     ```bash
     export APP_VERSION=latest && docker compose -f ./compose.yaml up -d
     ```
@@ -33,11 +31,11 @@
     cd /opt/capuchin
     ```
 2. Запустите новую версию приложения, пересоздав контейнер
+    > Версия: latest или X.Y или X.Y.Z
     ```bash
-    > APP_VERSION=latest
-    > APP_VERSION=X.Y
-    > APP_VERSION=X.Y.Z
-    export APP_VERSION=latest && docker compose -f ./compose.yaml up -d --force-recreate
+    export APP_VERSION=latest
+    docker compose -f ./compose.yaml pull
+    docker compose -f ./compose.yaml up -d --force-recreate
     ```
 3. Проверьте работоспособность новой версии
     ```bash
@@ -45,8 +43,6 @@
     docker logs capuchin
     curl -I http://localhost:3000
     ```
-
-Blue-green deployment не используется: два одновременно пишущих процесса в одну базу SQLite недопустимы. При обновлении контейнер создаётся заново, параллельная пишущая копия приложения не запускается, а том `./data` сохраняется — миграции goose применяются перед стартом, данные не теряются. Внешний nginx-прокси по-прежнему указывает на единый порт (см. `deploy/nginx_capuchin.conf`), отдельная настройка при обновлении не требуется.
 
 ## Разработка
 
@@ -71,17 +67,6 @@ Blue-green deployment не используется: два одновремен
     2. Откройте отдельную консоль и перейдите в каталог `front`
     3. `make init`
     4. `make run`
-
-### VSCode
-
-- Настройки для файла `.vscode/settings.json`
-    ```json
-    {
-        "go.generateTestsFlags": ["-template_dir=/path/to/back/third_party/gotests_template"],
-        "go.buildFlags": ["-tags=integration sqlite"],
-        "go.testTags": "integration sqlite"
-    }
-    ```
 
 ### Обновлении версий (golang, golangci-lint и alpine)
 
@@ -114,13 +99,11 @@ Blue-green deployment не используется: два одновремен
 
 ## БД
 
-Приложение хранит данные в одном файле SQLite. Путь задаётся переменной `SQLITE_DB_PATH` (`./back/.envrc.example`, `deploy/compose.yaml`). И в приложении, и в Goose используется драйвер `sqlite3`, поэтому отдельный сервер базы данных не требуется.
+Приложение хранит данные в одном файле SQLite. Путь задаётся переменной `SQLITE_DB_PATH` (`./back/.envrc.example`, `deploy/compose.yaml`).
 
 Перед первым запуском накатываются миграции (`goose up`, `GOOSE_DRIVER=sqlite3`); файл БД создаётся автоматически.
 
 ### Бэкап БД
-
-Файл БД можно копировать целиком. При включённом WAL-режиме надёжнее использовать CLI `sqlite3`:
 
 ```bash
 export CAPUCHIN_DT=$(date +%Y-%m-%d_%H-%M-%S)
@@ -136,11 +119,7 @@ docker cp ./${CAPUCHIN_DT}.db capuchin:/app/data/restore.db
 docker exec capuchin sqlite3 /app/data/restore.db "VACUUM INTO '/app/data/capuchin.db'"
 ```
 
-При остановленном писателе достаточно заменить файл БД (и `-wal`/`-shm`, если были) на резервную копию.
-
-## Заметки
-
-- https://echo.labstack.com/docs/context#concurrency
+При остановленном писателе достаточно заменить файл БД на резервную копию и удалить файлы `-wal`/`-shm`.
 
 ## Changelog сторонних библиотек
 
