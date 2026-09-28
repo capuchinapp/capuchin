@@ -78,7 +78,6 @@ jobs:
       - name: Prepare environment
         id: environment
         run: |
-          echo "Latest tag: ${TAG}"
           echo "status=${TAG#v}" >> "$GITHUB_OUTPUT"
 
           mkdir -p "${BADGE_PATH%/*}"
@@ -109,7 +108,68 @@ jobs:
             echo "Nothing to commit"
             echo "changed=false" >> "$GITHUB_OUTPUT"
           else
-            git commit -m "Add/Update badge"
+            git commit -m "Add/Update latest tag badge"
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Push badge commit
+        uses: ad-m/github-push-action@v1
+        if: ${{ steps.commit.outputs.changed == 'true' }}
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ env.BADGE_OUTPUT_BRANCH }}
+
+  badges-image-size:
+    needs: build-image
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ env.BADGE_OUTPUT_BRANCH }}
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{github.actor}}
+          password: ${{secrets.GITHUB_TOKEN}}
+
+      - name: Measure image size
+        id: size
+        run: |
+          IMAGE="ghcr.io/capuchinapp/capuchin:${TAG#v}"
+          docker pull --platform linux/amd64 "$IMAGE"
+          echo "status=$(docker image inspect "$IMAGE" -f '{{ .Size }}' | numfmt --to=iec)" >> "$GITHUB_OUTPUT"
+
+          mkdir -p "${BADGE_PATH%/*}"
+          echo "path=${BADGE_PATH}" >> "${GITHUB_OUTPUT}"
+        env:
+          TAG: ${{ inputs.tag || github.ref_name }}
+          BADGE_PATH: master/image_size.svg
+
+      - name: Generate the badge SVG image
+        uses: emibcn/badge-action@v2
+        with:
+          label: "image size"
+          status: ${{ steps.size.outputs.status }}
+          color: ${{ env.BADGE_COLOR_DEFAULT }}
+          path: ${{ steps.size.outputs.path }}
+
+      - name: Commit badge
+        id: commit
+        env:
+          BADGE: ${{ steps.size.outputs.path }}
+          GIT_USER_NAME: ${{ env.BADGE_GIT_USER_NAME }}
+          GIT_USER_EMAIL: ${{ env.BADGE_GIT_USER_EMAIL }}
+        run: |
+          git config --local user.name "${GIT_USER_NAME}"
+          git config --local user.email "${GIT_USER_EMAIL}"
+          git add "${BADGE}"
+          if git diff --cached --quiet; then
+            echo "Nothing to commit"
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            git commit -m "Add/Update image size badge"
             echo "changed=true" >> "$GITHUB_OUTPUT"
           fi
 

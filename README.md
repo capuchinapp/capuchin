@@ -1,5 +1,6 @@
 [![audit](https://github.com/capuchinapp/capuchin/actions/workflows/audit.yml/badge.svg?branch=master)](https://github.com/capuchinapp/capuchin/actions/workflows/audit.yml)
 [![latest](https://github.com/capuchinapp/capuchin/blob/badges/master/latest_tag.svg)](https://github.com/capuchinapp/capuchin/pkgs/container/capuchin)
+[![image_size](https://github.com/capuchinapp/capuchin/blob/badges/master/image_size.svg)](https://github.com/capuchinapp/capuchin/pkgs/container/capuchin)
 
 # Capuchin
 
