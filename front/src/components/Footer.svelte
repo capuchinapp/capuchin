@@ -4,8 +4,7 @@
 
 <div class="row">
     <div class="col-md-4 d-flex align-items-center">
-        <!-- svelte-ignore a11y_invalid_attribute -->
-        &copy; DimNS {$capuchin.appVersionFront}
+        <a href="https://github.com/capuchinapp/capuchin">v{$capuchin.appVersionFront}</a>
     </div>
     <div class="col-md-4 d-md-flex align-items-center justify-content-md-center">
         &nbsp;
