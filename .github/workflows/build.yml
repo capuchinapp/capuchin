@@ -67,61 +67,11 @@ jobs:
           body: ${{ steps.changelog.outputs.changes }}
           token: ${{ secrets.GITHUB_TOKEN }}
 
-  badges-latest-tag:
+  badges:
     needs: build-image
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v7
-        with:
-          ref: ${{ env.BADGE_OUTPUT_BRANCH }}
-
-      - name: Prepare environment
-        id: environment
-        run: |
-          echo "status=${TAG#v}" >> "$GITHUB_OUTPUT"
-
-          mkdir -p "${BADGE_PATH%/*}"
-          echo "path=${BADGE_PATH}" >> "${GITHUB_OUTPUT}"
-        env:
-          TAG: ${{ inputs.tag || github.ref_name }}
-          BADGE_PATH: master/latest_tag.svg
-
-      - name: Generate the badge SVG image
-        uses: emibcn/badge-action@v2
-        with:
-          label: "latest"
-          status: ${{ steps.environment.outputs.status }}
-          color: ${{ env.BADGE_COLOR_DEFAULT }}
-          path: ${{ steps.environment.outputs.path }}
-
-      - name: Commit badge
-        id: commit
-        env:
-          BADGE: ${{ steps.environment.outputs.path }}
-          GIT_USER_NAME: ${{ env.BADGE_GIT_USER_NAME }}
-          GIT_USER_EMAIL: ${{ env.BADGE_GIT_USER_EMAIL }}
-        run: |
-          git config --local user.name "${GIT_USER_NAME}"
-          git config --local user.email "${GIT_USER_EMAIL}"
-          git add "${BADGE}"
-          if git diff --cached --quiet; then
-            echo "Nothing to commit"
-            echo "changed=false" >> "$GITHUB_OUTPUT"
-          else
-            git commit -m "Add/Update latest tag badge"
-            echo "changed=true" >> "$GITHUB_OUTPUT"
-          fi
-
-      - name: Push badge commit
-        uses: ad-m/github-push-action@v1
-        if: ${{ steps.commit.outputs.changed == 'true' }}
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{ env.BADGE_OUTPUT_BRANCH }}
-
-  badges-image-size:
-    needs: build-image
-    runs-on: ubuntu-latest
+    env:
+      TAG: ${{ inputs.tag || github.ref_name }}
     steps:
       - uses: actions/checkout@v7
         with:
@@ -134,46 +84,49 @@ jobs:
           username: ${{github.actor}}
           password: ${{secrets.GITHUB_TOKEN}}
 
+      - name: Latest version
+        id: version
+        run: echo "value=${TAG#v}" >> "$GITHUB_OUTPUT"
+      - name: Generate latest tag badge SVG image
+        uses: emibcn/badge-action@v2
+        with:
+          label: "latest"
+          status: ${{ steps.version.outputs.value }}
+          color: ${{ env.BADGE_COLOR_DEFAULT }}
+          path: master/latest_tag.svg
+
       - name: Measure image size
         id: size
         run: |
           IMAGE="ghcr.io/capuchinapp/capuchin:${TAG#v}"
           docker pull --platform linux/amd64 "$IMAGE"
-          echo "status=$(docker image inspect "$IMAGE" -f '{{ .Size }}' | numfmt --to=iec)" >> "$GITHUB_OUTPUT"
-
-          mkdir -p "${BADGE_PATH%/*}"
-          echo "path=${BADGE_PATH}" >> "${GITHUB_OUTPUT}"
-        env:
-          TAG: ${{ inputs.tag || github.ref_name }}
-          BADGE_PATH: master/image_size.svg
-
-      - name: Generate the badge SVG image
+          echo "value=$(docker image inspect "$IMAGE" -f '{{ .Size }}' | numfmt --to=iec)" >> "$GITHUB_OUTPUT"
+      - name: Generate image size badge SVG image
         uses: emibcn/badge-action@v2
         with:
           label: "image size"
-          status: ${{ steps.size.outputs.status }}
+          status: ${{ steps.size.outputs.value }}
           color: ${{ env.BADGE_COLOR_DEFAULT }}
-          path: ${{ steps.size.outputs.path }}
+          path: master/image_size.svg
 
-      - name: Commit badge
+      - name: Commit badges
         id: commit
         env:
-          BADGE: ${{ steps.size.outputs.path }}
           GIT_USER_NAME: ${{ env.BADGE_GIT_USER_NAME }}
           GIT_USER_EMAIL: ${{ env.BADGE_GIT_USER_EMAIL }}
         run: |
           git config --local user.name "${GIT_USER_NAME}"
           git config --local user.email "${GIT_USER_EMAIL}"
-          git add "${BADGE}"
+          git add master
           if git diff --cached --quiet; then
             echo "Nothing to commit"
             echo "changed=false" >> "$GITHUB_OUTPUT"
           else
-            git commit -m "Add/Update image size badge"
+            git commit -m "Update badges for ${TAG}"
             echo "changed=true" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Push badge commit
+      - name: Push badge commits
         uses: ad-m/github-push-action@v1
         if: ${{ steps.commit.outputs.changed == 'true' }}
         with:
