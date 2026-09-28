@@ -90,7 +90,7 @@ jobs:
       - name: Generate the badge SVG image
         uses: emibcn/badge-action@v2
         with:
-          label: "🏷️ latest"
+          label: "latest"
           status: ${{ steps.environment.outputs.status }}
           color: ${{ env.BADGE_COLOR_DEFAULT }}
           path: ${{ steps.environment.outputs.path }}
