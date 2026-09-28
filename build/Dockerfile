@@ -29,26 +29,25 @@ RUN go mod tidy
 
 RUN go build -trimpath -o capuchin -ldflags="-w -X 'main.appVersion=${APP_VERSION}'" ./cmd/capuchin/main.go
 
-RUN go install github.com/pressly/goose/v3/cmd/goose@v3.28.0
+RUN go install -ldflags="-s -w" github.com/pressly/goose/v3/cmd/goose@v3.28.0
 RUN cp /go/bin/goose .
 
 FROM alpine:3.24
 
 WORKDIR /app
 
-COPY --from=builder /app/capuchin .
-COPY --from=builder /app/goose /usr/local/bin/goose
-COPY back/migrations ./migrations
+RUN apk add --no-cache libc6-compat su-exec \
+    && addgroup --system appgroup \
+    && adduser --system appuser --ingroup appgroup
 
-RUN apk add --no-cache libc6-compat su-exec
+COPY --from=builder --chown=appuser:appgroup /app/capuchin .
+COPY --from=builder --chown=appuser:appgroup /app/goose /usr/local/bin/goose
+COPY --chown=appuser:appgroup back/migrations ./migrations
+COPY --chown=appuser:appgroup build/entrypoint.sh /entrypoint.sh
 
-RUN chmod +x /usr/local/bin/goose /app/capuchin
-
-RUN addgroup --system appgroup && adduser --system appuser --ingroup appgroup
-RUN mkdir -p /app/data && chown -R appuser:appgroup /app /usr/local/bin/goose
-
-COPY build/entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
+RUN chmod +x /entrypoint.sh /usr/local/bin/goose /app/capuchin \
+    && mkdir -p /app/data \
+    && chown appuser:appgroup /app/data
 
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
     CMD wget --no-verbose --tries=1 --spider http://localhost:3000/api/health || exit 1
