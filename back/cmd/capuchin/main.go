@@ -9,7 +9,7 @@ import (
 	"capuchin/internal/app/capuchin"
 )
 
-var appVersion = "v0.0.0" //nolint:gochecknoglobals // все в порядке
+var appVersion = "0.0.0" //nolint:gochecknoglobals // все в порядке
 
 func main() {
 	err := capuchin.Start(appVersion)

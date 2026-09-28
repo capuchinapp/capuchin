@@ -46,7 +46,7 @@ func TestIndexHandler_Index(t *testing.T) {
 					}, nil)
 
 				return &IndexHandler{
-					appVersion:    "v0.0.0",
+					appVersion:    "0.0.0",
 					cookieManager: cookieManager,
 					sessionRepo:   sessionRepo,
 					timelogRepo:   timelogRepo,
@@ -54,7 +54,7 @@ func TestIndexHandler_Index(t *testing.T) {
 			},
 			wantCode: http.StatusOK,
 			wantBody: `{
-				"appVersion": "v0.0.0",
+				"appVersion": "0.0.0",
 				"isAuth": true,
 				"name": "Capuchin API",
 				"runningTimelogDatetime": "2025-01-22 14:39:15"
@@ -84,7 +84,7 @@ func TestIndexHandler_Index(t *testing.T) {
 					Return(domain.Timelog{}, domain.ErrNotFound)
 
 				return &IndexHandler{
-					appVersion:    "v0.0.0",
+					appVersion:    "0.0.0",
 					cookieManager: cookieManager,
 					sessionRepo:   sessionRepo,
 					timelogRepo:   timelogRepo,
@@ -92,7 +92,7 @@ func TestIndexHandler_Index(t *testing.T) {
 			},
 			wantCode: http.StatusOK,
 			wantBody: `{
-				"appVersion": "v0.0.0",
+				"appVersion": "0.0.0",
 				"isAuth": true,
 				"name": "Capuchin API",
 				"runningTimelogDatetime": null
@@ -114,14 +114,14 @@ func TestIndexHandler_Index(t *testing.T) {
 					Return(domain.Session{}, nil)
 
 				return &IndexHandler{
-					appVersion:    "v0.0.0",
+					appVersion:    "0.0.0",
 					cookieManager: cookieManager,
 					sessionRepo:   sessionRepo,
 				}
 			},
 			wantCode: http.StatusOK,
 			wantBody: `{
-				"appVersion": "v0.0.0",
+				"appVersion": "0.0.0",
 				"isAuth": false,
 				"name": "Capuchin API",
 				"runningTimelogDatetime": null
