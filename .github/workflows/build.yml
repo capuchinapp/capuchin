@@ -7,13 +7,19 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: 'Tag to build (e.g., v1.0.0)'
+        description: "Tag to build (e.g., v1.0.0)"
         required: true
         type: string
 
 permissions:
   contents: write
   packages: write
+
+env:
+  BADGE_OUTPUT_BRANCH: badges
+  BADGE_GIT_USER_NAME: "GitHub Action"
+  BADGE_GIT_USER_EMAIL: "action@github.com"
+  BADGE_COLOR_DEFAULT: green
 
 jobs:
   build-image:
@@ -60,3 +66,56 @@ jobs:
           name: Release ${{ inputs.tag || github.ref_name }}
           body: ${{ steps.changelog.outputs.changes }}
           token: ${{ secrets.GITHUB_TOKEN }}
+
+  badges-latest-tag:
+    needs: build-image
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ env.BADGE_OUTPUT_BRANCH }}
+
+      - name: Prepare environment
+        id: environment
+        run: |
+          echo "Latest tag: ${TAG}"
+          echo "status=${TAG#v}" >> "$GITHUB_OUTPUT"
+
+          mkdir -p "${BADGE_PATH%/*}"
+          echo "path=${BADGE_PATH}" >> "${GITHUB_OUTPUT}"
+        env:
+          TAG: ${{ inputs.tag || github.ref_name }}
+          BADGE_PATH: master/latest_tag.svg
+
+      - name: Generate the badge SVG image
+        uses: emibcn/badge-action@v2
+        with:
+          label: "🏷️ latest"
+          status: ${{ steps.environment.outputs.status }}
+          color: ${{ env.BADGE_COLOR_DEFAULT }}
+          path: ${{ steps.environment.outputs.path }}
+
+      - name: Commit badge
+        id: commit
+        env:
+          BADGE: ${{ steps.environment.outputs.path }}
+          GIT_USER_NAME: ${{ env.BADGE_GIT_USER_NAME }}
+          GIT_USER_EMAIL: ${{ env.BADGE_GIT_USER_EMAIL }}
+        run: |
+          git config --local user.name "${GIT_USER_NAME}"
+          git config --local user.email "${GIT_USER_EMAIL}"
+          git add "${BADGE}"
+          if git diff --cached --quiet; then
+            echo "Nothing to commit"
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            git commit -m "Add/Update badge"
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Push badge commit
+        uses: ad-m/github-push-action@v1
+        if: ${{ steps.commit.outputs.changed == 'true' }}
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ env.BADGE_OUTPUT_BRANCH }}
